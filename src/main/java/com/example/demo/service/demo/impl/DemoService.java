@@ -1,8 +1,8 @@
 package com.example.demo.service.demo.impl;
 
-import com.example.demo.entities.Student;
+import com.example.demo.entities.User;
 
 public interface DemoService {
 
-    void learn(Student s);
+    void learn(User s);
 }

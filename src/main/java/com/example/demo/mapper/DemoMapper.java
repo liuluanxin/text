@@ -1,10 +1,9 @@
 package com.example.demo.mapper;
 
-import com.example.demo.entities.Student;
-import org.springframework.web.bind.annotation.Mapping;
+import com.example.demo.entities.User;
 
 
 public interface DemoMapper {
-    void learn(Student student);
+    void learn(User student);
 
 }
