@@ -10,19 +10,15 @@ public class UserController {
 
     private final UserService userService;
 
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/user/login")
-    public UserResponse login(UserRequest request) {
+    @PostMapping("/user/login")
+    public void login(UserRequest request) {
 
-        User user = userService.login(request);
+        userService.login(request);
 
-        UserResponse response = new UserResponse();
-        BeanUtils.copyProperties(user, response);
-        return response;
     }
 
     @PostMapping("/user/register")

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="jp.co.kuronekoyamato.nw.api.delv.dao.UserDao">
+
+    <sql id="userListWhereSql">
+        <where>
+            <if test="!@org.springframework.util.ObjectUtils@isEmpty(usrId)">
+                and t1.USR_ID = #{usrId}
+            </if>
+            <if test="!@org.springframework.util.ObjectUtils@isEmpty(usrNm)">
+                and t1.USR_NM = #{usrNm}
+            </if>
+        </where>
+    </sql>
+
+    <select id="getUser" resultMap="getUserListMap"
+            parameterType="com/example/demo/controller/user/UserResponse.java">
+        select
+        *
+        from
+        user
+        <where>
+            t1.USR_ID = #{usrId}
+            and t1.USR_NM = #{usrNm}
+        </where>
+    </select>
+
+</mapper>
