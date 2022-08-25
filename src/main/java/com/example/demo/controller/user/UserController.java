@@ -17,7 +17,7 @@ public class UserController {
     @PostMapping("/user/login")
     public void login(UserRequest request) {
 
-        userService.login(request);
+        userService.getLogin(request);
 
     }
 

@@ -12,13 +12,11 @@ public class UserServiceImpl implements UserService {
     protected UserDao userDao;
 
     @Override
-    public void login(UserRequest request) {
+    public void getLogin(UserRequest request) {
         UserResponse res = new UserResponse();
 //        long count = userDao.getUser(request);
         res.setPassWord(request.getPassWord());
         res.setUserName(request.getUserName());
-
-
     }
 
     @Override
