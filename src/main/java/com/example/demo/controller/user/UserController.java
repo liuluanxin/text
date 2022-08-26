@@ -2,20 +2,19 @@ package com.example.demo.controller.user;
 
 import com.example.demo.entities.User;
 import com.example.demo.service.user.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 @RestController
 public class UserController {
 
-    private final UserService userService;
+    @Resource
+    protected UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
+    @ResponseBody
     @PostMapping("/user/login")
-    public void login(UserRequest request) {
+    public void login(User request) {
 
         userService.getLogin(request);
 

@@ -1,11 +1,9 @@
 package com.example.demo.service.user;
 
-import com.example.demo.controller.user.UserRequest;
-import com.example.demo.controller.user.UserResponse;
 import com.example.demo.entities.User;
 
 public interface UserService {
-    void getLogin(UserRequest request);
+    Long getLogin(User user);
 
-    public void register(User user);
+    void register(User user);
 }
