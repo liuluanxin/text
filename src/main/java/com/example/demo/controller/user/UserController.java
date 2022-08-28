@@ -2,27 +2,26 @@ package com.example.demo.controller.user;
 
 import com.example.demo.entities.User;
 import com.example.demo.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import javax.xml.transform.Result;
 
 @RestController
+@RequestMapping("user")
 public class UserController {
 
-    @Resource
-    protected UserService userService;
+    @Autowired
+    private UserService userService;
 
-    @ResponseBody
-    @PostMapping("/user/login")
-    public void login(User request) {
-
-        userService.getLogin(request);
-
+    @PostMapping("/login")
+    public User login(@RequestBody User request) {
+        User use = userService.getLogin(request);
+        return use;
     }
 
-    @PostMapping("/user/register")
-    public void register(User user) {
-
-        userService.register(new User());
+    @PostMapping("/register")
+    public void register(@RequestBody User user) {
+        userService.register(user);
     }
 }
