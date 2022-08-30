@@ -17,18 +17,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getLogin(User user) {
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("user_name", user.getUserName());
-        wrapper.eq("pass_word", user.getPassWord());
-        wrapper.eq("delete_flag", "0");
-        User use = userMapper.selectOne(wrapper);
+        User use = userMapper.getUser(user);
 
         return use;
     }
 
     @Override
     public void register(User user) {
-        user.setDelete_flag("0");
-        userMapper.insert(user);
+        userMapper.insterRegister(user);
     }
 }

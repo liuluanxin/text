@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.WorkTimeMapper">
+
+    <select id="getWorkTimeListCount" resultType="java.lang.Long"
+            parameterType="com.example.demo.service.workTime.WorkTimeCondition">
+        SELECT
+        count(1)
+        FROM
+        tr_user_extra_worktime t1
+        LEFT JOIN m_user t2 ON
+        t1.user_id = t2.user_id
+        LEFT JOIN m_project t3 ON
+        t1.project_id = t3.project_id
+        LEFT JOIN m_user t4 ON
+        t3.management_user_id = t4.user_id
+        WHERE
+        1 = 1
+        <if test="!@org.springframework.util.StringUtils@isEmpty(userId)">
+            AND t1.user_id = #{userId}
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(managerUserId)">
+            AND t3.management_user_id = #{managerUserId}
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(projectId)">
+            AND t1.project_id = #{projectId}
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(year)">
+            <if test="!@org.springframework.util.StringUtils@isEmpty(month)">
+                # AND t1.target_date <![CDATA[>=]]> TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD')
+                # AND t1.target_date <![CDATA[<]]>  TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD') + interval '1
+                # month'
+            </if>
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(targetDate)">
+            # AND t1.target_date <![CDATA[=]]> TO_DATE(#{targetDate}, 'YYYY-MM-DD')
+        </if>
+    </select>
+
+    <select id="getWorkTimeList" resultType="com.example.demo.entities.WorkTime"
+            parameterType="com.example.demo.service.workTime.WorkTimeCondition">
+        SELECT
+        t1.user_id "userId"
+        , t2.user_name "userName"
+        # , to_char(t1.target_date, 'YYYY/MM/DD') "targetDate"
+        ,t1.target_date "targetDate"
+        , t1.project_id "projectId"
+        , t3.project_name "projectName"
+        , t3.financial_id "financialId"
+        , t4.user_name "pmName"
+        # , to_char(t1.apply_date, 'YYYY/MM/DD') "applyDate"
+        ,t1.apply_date "applyDate"
+        , t1.time "time"
+        , t1.reason "comment"
+        , t1.applied "statusApply"
+        , t1.pm_approved "statusPmApprove"
+        , t1.dm_approved "statusDmApprove"
+        , t1.create_by "createBy"
+        , t1.create_at "createAt"
+        , t1.update_by "updateBy"
+        , t1.update_at "updateAt"
+        # , t1.user_id || '_' || to_char(t1.target_date,'YYYYMMDD') || '_' || t1.project_id "id"
+        , t1.user_id || '_' || t1.target_date || '_' || t1.project_id "id"
+        FROM
+        tr_user_extra_worktime t1
+        LEFT JOIN m_user t2 ON
+        t1.user_id = t2.user_id
+        LEFT JOIN m_project t3 ON
+        t1.project_id = t3.project_id
+        LEFT JOIN m_user t4 ON
+        t3.management_user_id = t4.user_id
+        WHERE
+        1 = 1
+        <if test="!@org.springframework.util.StringUtils@isEmpty(userId)">
+            AND t1.user_id = #{userId}
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(managerUserId)">
+            AND t3.management_user_id = #{managerUserId}
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(projectId)">
+            AND t1.project_id = #{projectId}
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(year)">
+            <if test="!@org.springframework.util.StringUtils@isEmpty(month)">
+                # AND t1.target_date <![CDATA[>=]]> TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD')
+                # AND t1.target_date <![CDATA[<]]>  TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD') + interval '1
+                # month'
+            </if>
+        </if>
+        <if test="!@org.springframework.util.StringUtils@isEmpty(targetDate)">
+            # AND t1.target_date <![CDATA[=]]> TO_DATE(#{targetDate}, 'YYYY-MM-DD')
+        </if>
+        ORDER BY
+        t1.target_date desc
+        <if test="limit > 0">
+            LIMIT ${limit} OFFSET ${offset}
+        </if>
+    </select>
+
+    <select id="getWorkTime" resultType="com.example.demo.entities.WorkTime">
+        SELECT user_id     "userId"
+#              , to_char(target_date, 'YYYY/MM/DD')                                      "targetDate"
+             , project_id  "projectId"
+#              , to_char(apply_date, 'YYYY/MM/DD')                                       "applyDate"
+             , time        "time"
+             , reason      "comment"
+             , applied     "statusApply"
+             , pm_approved "statusPmApprove"
+             , dm_approved "statusDmApprove"
+             , create_by   "createBy"
+             , create_at   "createAt"
+             , update_by   "updateBy"
+             , update_at   "updateAt"
+#              , user_id || '_' || to_char(target_date, 'YYYYMMDD') || '_' || project_id "id"
+        FROM tr_user_extra_worktime
+        WHERE user_id = #{userId}
+#           AND target_date <![CDATA[=]]> TO_DATE(#{targetDate}, 'YYYYMMDD')
+          AND project_id = #{projectId}
+    </select>
+
+    <select id="getWorkTimeCreateUse" resultType="com.example.demo.entities.WorkTime">
+        SELECT user_id     "userId"
+#              , to_char(target_date, 'YYYY/MM/DD')                                      "targetDate"
+             , project_id  "projectId"
+#              , to_char(apply_date, 'YYYY/MM/DD')                                       "applyDate"
+             , time        "time"
+             , reason      "comment"
+             , applied     "statusApply"
+             , pm_approved "statusPmApprove"
+             , dm_approved "statusDmApprove"
+             , create_by   "createBy"
+             , create_at   "createAt"
+             , update_by   "updateBy"
+             , update_at   "updateAt"
+#              , user_id || '_' || to_char(target_date, 'YYYYMMDD') || '_' || project_id "id"
+        FROM tr_user_extra_worktime
+        WHERE user_id = #{userId}
+#           AND target_date <![CDATA[=]]> TO_DATE(#{targetDate}, 'YYYY-MM-DD')
+          AND project_id = #{projectId}
+    </select>
+
+    <delete id="deleteWorkTime">
+        DELETE
+        FROM tr_user_extra_worktime
+        WHERE user_id = #{userId}
+#           AND target_date = TO_DATE(#{targetDate}, 'YYYYMMDD')
+          AND project_id = #{projectId}
+    </delete>
+
+    <insert id="creatWorkTime" parameterType="com.example.demo.entities.WorkTime">
+        INSERT INTO tr_user_extra_worktime
+        ( user_id
+        , target_date
+        , project_id
+        , apply_date
+        , time
+        , reason
+        , applied
+        , pm_approved
+        , dm_approved
+        , create_by
+        , create_at
+        , update_by
+        , update_at)
+        VALUES ( #{userId}
+#                , TO_DATE(#{targetDate}, 'YYYY-MM-DD')
+               , #{targetDate}
+               , #{projectId}
+#                , TO_DATE(#{applyDate}, 'YYYY-MM-DD')
+               , #{applyDate}
+               , #{time}
+               , #{comment}
+               , #{statusApply}
+               , '1'
+               , '1'
+               , #{createBy}
+               , now()
+               , #{updateBy}
+               , now())
+    </insert>
+
+    <update id="updateWorkTime" parameterType="com.example.demo.entities.WorkTime">
+        UPDATE
+            tr_user_extra_worktime
+        SET project_id  = #{projectId}
+#           , target_date = TO_DATE(#{targetDate}, 'YYYY-MM-DD')
+          , target_date = #{targetDate}
+          , time        = #{time}
+          , reason      = #{comment}
+          , applied     = #{statusApply}
+          , pm_approved = '1'
+          , dm_approved = '1'
+          , update_at   = NOW()
+          , update_by   = #{updateBy}
+#         WHERE user_id || '_' || to_char(target_date, 'YYYYMMDD') || '_' || project_id = #{id}
+        WHERE user_id || '_' || target_date || '_' || project_id = #{id}
+    </update>
+
+</mapper>

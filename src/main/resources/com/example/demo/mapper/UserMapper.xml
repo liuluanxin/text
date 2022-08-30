@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <select id="getUser" resultType="com.example.demo.entities.User">
+        select *
+        from m_user
+        where user_name = #{userName}
+          and pass_word = #{passWord}
+    </select>
+    <insert id="insterRegister" parameterType="com.example.demo.entities.User">
+        insert into m_user (user_id, user_name, sex, position, mail, pass_word, create_by, create_at, update_by,
+                            update_at)
+        values ('003422', #{userName}, '男', 'PG', 'xin11.liu@nttdata.com', #{passWord} ,'xin11.liu',
+                now(), 'xin11.liu', now())
+    </insert>
+</mapper>
