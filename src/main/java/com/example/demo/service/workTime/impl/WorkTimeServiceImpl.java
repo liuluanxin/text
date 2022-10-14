@@ -8,6 +8,7 @@ import com.example.demo.mapper.WorkTimeMapper;
 import com.example.demo.service.workTime.WorkTimeCondition;
 import com.example.demo.service.workTime.WorkTimeResult;
 import com.example.demo.service.workTime.WorkTimeService;
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         // convert to response
         WorkTime workTime = new WorkTime();
         WorkTimeCondition condition = new WorkTimeCondition();
+        String id = request.getTargetDate() + request.getProjectId();
         String userId = "003422";
         condition.setUserId(userId);
         condition.setProjectId(request.getProjectId());
@@ -71,9 +73,9 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         // ユーザID
         workTime.setUserId(userId);
         // 申請日
-//        workTime.setApplyDate(DateUtils.format(new Date()));
+        workTime.setApplyDate(DateUtils.formatDate(new Date()));
         // 申請状態
-//        workTime.setStatusApply(request.getStatusApplyBool() ? "2" : "3");
+        workTime.setStatusApply(request.getStatusApplyBool() ? "2" : "3");
         // 作成者
         workTime.setCreateBy(userId);
         // 更新者
@@ -93,11 +95,11 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         WorkTime workTime = new WorkTime();
         BeanUtils.copyProperties(request, workTime);
         // id
-        workTime.setId(request.getId());
+//        workTime.setId(request.getId());
         // ユーザID
         workTime.setUserId(userId);
         // 申請状態
-//        workTime.setStatusApply(request.getStatusApplyBool() ? "2" : "3");
+        workTime.setStatusApply(request.getStatusApplyBool() ? "2" : "3");
         // 更新者
         workTime.setUpdateBy(userId);
         workTimeMapper.updateWorkTime(workTime);

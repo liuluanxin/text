@@ -90,8 +90,8 @@ public class WorkTimeController {
 
         List<String> ids = new ArrayList<String>();
         for (WorkTimeRequest work : request) {
-            String id = work.getId();
-            ids.add(id);
+//            String id = work.getId();
+//            ids.add(id);
         }
         // call service
         workTimeService.deleteWorkTimes(ids);
@@ -109,7 +109,7 @@ public class WorkTimeController {
     public void deleteWorkTimeForUser(@RequestBody WorkTimeRequest request) {
 
         List<String> ids = new ArrayList<String>();
-        ids.add(request.getId());
+//        ids.add(request.getId());
         // call service
         workTimeService.deleteWorkTimes(ids);
     }

@@ -10,7 +10,7 @@
     <insert id="insterRegister" parameterType="com.example.demo.entities.User">
         insert into m_user (user_id, user_name, sex, position, mail, pass_word, create_by, create_at, update_by,
                             update_at)
-        values ('003422', #{userName}, '男', 'PG', 'xin11.liu@nttdata.com', #{passWord} ,'xin11.liu',
-                now(), 'xin11.liu', now())
+        values ('003422', #{userName}, '男', 'PG', 'xin11.liu@nttdata.com', #{passWord} ,#{userName},
+                now(), #{userName}, now())
     </insert>
 </mapper>
