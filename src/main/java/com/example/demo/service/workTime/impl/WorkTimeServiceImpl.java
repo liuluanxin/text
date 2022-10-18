@@ -13,6 +13,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -60,12 +62,19 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         // convert to response
         WorkTime workTime = new WorkTime();
         WorkTimeCondition condition = new WorkTimeCondition();
-        String id = request.getTargetDate() + request.getProjectId();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = format.parse(request.getTargetDate());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        String id = DateUtils.formatDate(date, "yyyyMMdd") + request.getProjectId();
         String userId = "003422";
         condition.setUserId(userId);
         condition.setProjectId(request.getProjectId());
         condition.setTargetDate(request.getTargetDate());
-        long count = workTimeMapper.getWorkTimeListCount(condition);
+//        long count = workTimeMapper.getWorkTimeListCount(condition);
 //        if (count != 0) {
 //            throw new SystemException("当前日期和财务ID的申请记录已经存在，请确认日期和财务ID的内容是否正确。");
 //        }
@@ -73,7 +82,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         // ユーザID
         workTime.setUserId(userId);
         // 申請日
-        workTime.setApplyDate(DateUtils.formatDate(new Date()));
+        workTime.setApplyDate(DateUtils.formatDate(new Date(), "yyyy-MM-dd"));
         // 申請状態
         workTime.setStatusApply(request.getStatusApplyBool() ? "2" : "3");
         // 作成者

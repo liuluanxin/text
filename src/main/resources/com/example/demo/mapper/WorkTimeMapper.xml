@@ -99,10 +99,8 @@
 
     <select id="getWorkTime" resultType="com.example.demo.entities.WorkTime">
         SELECT user_id     "userId"
-#              , to_char(target_date, 'YYYY/MM/DD')                                      "targetDate"
              , project_id  "projectId"
-#              , to_char(apply_date, 'YYYY/MM/DD')                                       "applyDate"
-             , time        "time"
+             , `time`        "time"
              , reason      "comment"
              , applied     "statusApply"
              , pm_approved "statusPmApprove"
@@ -111,19 +109,15 @@
              , create_at   "createAt"
              , update_by   "updateBy"
              , update_at   "updateAt"
-#              , user_id || '_' || to_char(target_date, 'YYYYMMDD') || '_' || project_id "id"
         FROM tr_user_extra_worktime
         WHERE user_id = #{userId}
-#           AND target_date <![CDATA[=]]> TO_DATE(#{targetDate}, 'YYYYMMDD')
           AND project_id = #{projectId}
     </select>
 
     <select id="getWorkTimeCreateUse" resultType="com.example.demo.entities.WorkTime">
         SELECT user_id     "userId"
-#              , to_char(target_date, 'YYYY/MM/DD')                                      "targetDate"
              , project_id  "projectId"
-#              , to_char(apply_date, 'YYYY/MM/DD')                                       "applyDate"
-             , time        "time"
+             , `time`        "time"
              , reason      "comment"
              , applied     "statusApply"
              , pm_approved "statusPmApprove"
@@ -132,10 +126,8 @@
              , create_at   "createAt"
              , update_by   "updateBy"
              , update_at   "updateAt"
-#              , user_id || '_' || to_char(target_date, 'YYYYMMDD') || '_' || project_id "id"
         FROM tr_user_extra_worktime
         WHERE user_id = #{userId}
-#           AND target_date <![CDATA[=]]> TO_DATE(#{targetDate}, 'YYYY-MM-DD')
           AND project_id = #{projectId}
     </select>
 
@@ -143,7 +135,6 @@
         DELETE
         FROM tr_user_extra_worktime
         WHERE user_id = #{userId}
-#           AND target_date = TO_DATE(#{targetDate}, 'YYYYMMDD')
           AND project_id = #{projectId}
     </delete>
 
@@ -153,7 +144,7 @@
         , target_date
         , project_id
         , apply_date
-        , time
+        , `time`
         , reason
         , applied
         , pm_approved
@@ -163,10 +154,8 @@
         , update_by
         , update_at)
         VALUES ( #{userId}
-#                , TO_DATE(#{targetDate}, 'YYYY-MM-DD')
                , #{targetDate}
                , #{projectId}
-#                , TO_DATE(#{applyDate}, 'YYYY-MM-DD')
                , #{applyDate}
                , #{time}
                , #{comment}
@@ -183,16 +172,14 @@
         UPDATE
             tr_user_extra_worktime
         SET project_id  = #{projectId}
-#           , target_date = TO_DATE(#{targetDate}, 'YYYY-MM-DD')
           , target_date = #{targetDate}
-          , time        = #{time}
+          , `time`        = #{time}
           , reason      = #{comment}
           , applied     = #{statusApply}
           , pm_approved = '1'
           , dm_approved = '1'
           , update_at   = NOW()
           , update_by   = #{updateBy}
-#         WHERE user_id || '_' || to_char(target_date, 'YYYYMMDD') || '_' || project_id = #{id}
         WHERE user_id || '_' || target_date || '_' || project_id = #{id}
     </update>
 
