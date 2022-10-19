@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.demo.controller.workTime.WorkTimeListRequest;
 import com.example.demo.controller.workTime.WorkTimeRequest;
 import com.example.demo.entities.WorkTime;
+import com.example.demo.entities.WorkTimeForDisplay;
 import com.example.demo.mapper.WorkTimeMapper;
 import com.example.demo.service.workTime.WorkTimeCondition;
 import com.example.demo.service.workTime.WorkTimeResult;
@@ -12,9 +13,12 @@ import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -46,13 +50,32 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         BeanUtils.copyProperties(request, condition);
         String userId = "003422";
         condition.setUserId(userId);
+
         long count = workTimeMapper.getWorkTimeListCount(condition);
         if (count != 0) {
-            result.setList(workTimeMapper.getWorkTimeList(condition));
+            List<WorkTime> worktimeList = workTimeMapper.getWorkTimeList(condition);
+            List<WorkTimeForDisplay> workTimeForDisplayList = new ArrayList<WorkTimeForDisplay>();
+            if (!CollectionUtils.isEmpty(worktimeList)) {
+                // 残業情報リスト
+                for (WorkTime workTime : worktimeList) {
+                    WorkTimeForDisplay display = new WorkTimeForDisplay();
+                    // ID_残業日_プロジェクトID
+                    display.setId(workTime.getId());
+                    // 残業日
+                    display.setTargetDate(workTime.getTargetDate());
+                    // 残業時間
+                    display.setTime(workTime.getTime());
+                    // プロジェクトID
+                    display.setProjectId(workTime.getProjectId());
+                    // プロジェクト名
+                    display.setProjectName(workTime.getProjectName());
+                    // 残業理由
+                    display.setComment(workTime.getComment());
+                    workTimeForDisplayList.add(display);
+                }
+            }
+            result.setList(workTimeForDisplayList);
         }
-//        result.setLimit(condition.getLimit());
-//        result.setOffset(condition.getOffset());
-//        result.setTotalCount(count);
         return result;
     }
 

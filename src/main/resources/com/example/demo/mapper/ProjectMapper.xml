@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.ProjectMapper">
+
+    <select id="getProjectList" resultType="com.example.demo.entities.Project">
+        SELECT project_id         "id"
+             , project_name       "projectName"
+             , financial_id       "financialId"
+             , management_user_id "managementUserId"
+             , contract_months    "contractMonths"
+             , project_start_date "projectStartDate"
+             , project_end_date   "projectEndDate"
+             , create_by          "createBy"
+             , create_at          "createAt"
+             , update_by          "updateBy"
+             , update_at          "updateAt"
+        FROM m_project
+        where management_user_id = #{userId}
+    </select>
+</mapper>
