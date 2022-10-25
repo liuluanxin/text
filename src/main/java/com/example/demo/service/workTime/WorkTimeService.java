@@ -12,22 +12,20 @@ import java.util.List;
 public interface WorkTimeService {
     public WorkTime getWorkTime(String id);
 
-    WorkTimeResult getWorkTimeList(WorkTimeListRequest request);
+    WorkTimeResult getWorkTimeList(WorkTimeListRequest request) throws ParseException;
+
     /**
      * 残業情報登録
-     *
      */
     public WorkTime createWorkTime(WorkTimeRequest request);
 
     /**
      * 残業情報更新
-     *
      */
     public void updateWorkTimes(WorkTimeRequest request);
 
     /**
      * 残業情報削除
-     *
      */
     public void deleteWorkTimes(List<String> ids);
 }

@@ -10,15 +10,14 @@ import com.example.demo.service.workTime.WorkTimeCondition;
 import com.example.demo.service.workTime.WorkTimeResult;
 import com.example.demo.service.workTime.WorkTimeService;
 import org.apache.http.client.utils.DateUtils;
+import org.omg.CORBA.SystemException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,17 +38,21 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         //项目ID
         String projectId = split[2];
         work = workTimeMapper.getWorkTime(userId, targetDate, projectId);
-        work.setStatusApplyBool(StringUtils.equals(work.getStatusApply(), "2") ? true : false);
+        work.setStatusApplyBool("2".equals(work.getStatusApply()) ? true : false);
         return work;
     }
 
     @Override
-    public WorkTimeResult getWorkTimeList(WorkTimeListRequest request) {
+    public WorkTimeResult getWorkTimeList(WorkTimeListRequest request) throws ParseException {
         WorkTimeResult result = new WorkTimeResult();
         WorkTimeCondition condition = new WorkTimeCondition();
+
         BeanUtils.copyProperties(request, condition);
         String userId = "003422";
         condition.setUserId(userId);
+
+        String firstDateTime = request.getYear() + "," + request.getMonth() + "," + "01";
+        condition.setDay(firstDateTime);
 
         long count = workTimeMapper.getWorkTimeListCount(condition);
         if (count != 0) {
@@ -60,11 +63,12 @@ public class WorkTimeServiceImpl implements WorkTimeService {
                 for (WorkTime workTime : worktimeList) {
                     WorkTimeForDisplay display = new WorkTimeForDisplay();
                     // ID_残業日_プロジェクトID
-                    display.setId(workTime.getId());
+                    display.setId(workTime.getUserId() + "_" + workTime.getTargetDate() + "_" + workTime.getProjectId());
                     // 残業日
                     display.setTargetDate(workTime.getTargetDate());
                     // 残業時間
                     display.setTime(workTime.getTime());
+                    display.setStatusApply("3".equals(workTime.getStatusApply()) ? false : true);
                     // プロジェクトID
                     display.setProjectId(workTime.getProjectId());
                     // プロジェクト名
@@ -84,23 +88,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
 
         // convert to response
         WorkTime workTime = new WorkTime();
-        WorkTimeCondition condition = new WorkTimeCondition();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        try {
-            date = format.parse(request.getTargetDate());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        String id = DateUtils.formatDate(date, "yyyyMMdd") + request.getProjectId();
         String userId = "003422";
-        condition.setUserId(userId);
-        condition.setProjectId(request.getProjectId());
-        condition.setTargetDate(request.getTargetDate());
-//        long count = workTimeMapper.getWorkTimeListCount(condition);
-//        if (count != 0) {
-//            throw new SystemException("当前日期和财务ID的申请记录已经存在，请确认日期和财务ID的内容是否正确。");
-//        }
         BeanUtils.copyProperties(request, workTime);
         // ユーザID
         workTime.setUserId(userId);
@@ -114,6 +102,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         workTime.setUpdateBy(userId);
 
         workTimeMapper.creatWorkTime(workTime);
+
         return workTimeMapper.getWorkTimeCreateUse(userId, request.getTargetDate(), request.getProjectId());
     }
 
@@ -127,7 +116,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         WorkTime workTime = new WorkTime();
         BeanUtils.copyProperties(request, workTime);
         // id
-//        workTime.setId(request.getId());
+        workTime.setId(request.getId());
         // ユーザID
         workTime.setUserId(userId);
         // 申請状態

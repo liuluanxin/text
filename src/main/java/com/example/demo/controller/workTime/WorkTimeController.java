@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,12 @@ public class WorkTimeController {
     @Autowired
     private WorkTimeService workTimeService;
 
-    @ApiOperation(value = "残业时间情报取得(单件)", produces = "application/json")
+    /**
+     * 加班时间单件检索
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/user-worktime/{id}")
     @Transactional(readOnly = true)
     public WorkTimeResponse getWorkTime(@PathVariable("id") String id) {
@@ -28,10 +34,15 @@ public class WorkTimeController {
         return response;
     }
 
-    @ApiOperation(value = "残业时间情报取得(复数件)", produces = "application/json")
+    /**
+     * 加班时间一览
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/user-worktime")
     @Transactional(readOnly = true)
-    public WorkTimeListResponse getWorkTimeListForUser(WorkTimeListRequest request) {
+    public WorkTimeListResponse getWorkTimeListForUser(WorkTimeListRequest request) throws ParseException {
 
         // call service
         WorkTimeResult result = workTimeService.getWorkTimeList(request);
@@ -43,32 +54,30 @@ public class WorkTimeController {
     }
 
     /**
-     * 残業時間追加(ユーザ向け).
+     * 加班时间追加
      *
-     * @param request 残業時間追加
-     * @return 残業時間ID
+     * @param request
+     * @return
      */
-    @ApiOperation(value = "残業時間追加(ユーザ向け).", produces = "application/json")
     @PostMapping("/user-extra-worktime")
     @Transactional
     public WorkTimeResponse addWorkTimeForUser(@RequestBody WorkTimeRequest request) {
 
         // convert to response
         WorkTimeResponse response = new WorkTimeResponse();
-        WorkTime workTime = new WorkTime();
-        // call service
-        workTime = workTimeService.createWorkTime(request);
+
+        WorkTime workTime = workTimeService.createWorkTime(request);
+
         BeanUtils.copyProperties(workTime, response);
         return response;
     }
 
     /**
-     * 残業時間更新(ユーザ向け).
+     * 加班时间更新
      *
-     * @param request 残業時間更新
-     * @return 残業時間ID
+     * @param request
+     * @return
      */
-    @ApiOperation(value = "残業時間更新(ユーザ向け).", produces = "application/json")
     @PutMapping("/user-extra-worktime/{id}")
     @Transactional
     public void updateWorkTimeForUser(@RequestBody WorkTimeRequest request) {
@@ -78,39 +87,15 @@ public class WorkTimeController {
     }
 
     /**
-     * 残業時間削除(ユーザ向け).
+     * 加班时间删除
      *
-     * @param request 残業時間削除
-     * @return 残業時間ID
+     * @param
+     * @return
      */
-    @ApiOperation(value = "残業時間削除(ユーザ向け).", produces = "application/json")
-    @DeleteMapping("/user-extra-worktime")
+    @DeleteMapping("/user-worktime")
     @Transactional
-    public void deleteWorkTimeListForUser(@RequestBody List<WorkTimeRequest> request) {
-
-        List<String> ids = new ArrayList<String>();
-        for (WorkTimeRequest work : request) {
-//            String id = work.getId();
-//            ids.add(id);
-        }
-        // call service
-        workTimeService.deleteWorkTimes(ids);
-    }
-
-    /**
-     * 残業時間削除(ユーザ向け).
-     *
-     * @param request 残業時間削除
-     * @return 残業時間ID
-     */
-    @ApiOperation(value = "残業時間削除(ユーザ向け).", produces = "application/json")
-    @DeleteMapping("/user-extra-worktime/{id}")
-    @Transactional
-    public void deleteWorkTimeForUser(@RequestBody WorkTimeRequest request) {
-
-        List<String> ids = new ArrayList<String>();
-//        ids.add(request.getId());
-        // call service
+    public void deleteWorkTimeForUser(@RequestBody List<String> ids) {
+        
         workTimeService.deleteWorkTimes(ids);
     }
 }

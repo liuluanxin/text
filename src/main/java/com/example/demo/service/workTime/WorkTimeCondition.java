@@ -2,25 +2,34 @@ package com.example.demo.service.workTime;
 
 public class WorkTimeCondition {
 
-    /** serialVersionUID */
+    /**
+     * serialVersionUID
+     */
     private static final long serialVersionUID = 1L;
-    
-    /** the user id */
+
+    /**
+     * the user id
+     */
     private String userId;
 
-    /** the project id */
+    /**
+     * the project id
+     */
     private String projectId;
-    
-    /** the year */
-    private String year;
 
-    /** the month */
-    private String month;
+    /**
+     * the year
+     */
+    private String day;
 
-    /** the management user id */
+    /**
+     * the management user id
+     */
     private String managerUserId;
 
-    /** the target date */
+    /**
+     * the target date
+     */
     private String targetDate;
 
     /**
@@ -60,31 +69,17 @@ public class WorkTimeCondition {
     }
 
     /**
-     * @return the year
+     * @return the day
      */
-    public String getYear() {
-        return year;
+    public String getDay() {
+        return day;
     }
 
     /**
-     * @param year the year to set
+     * @param day the year to set
      */
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    /**
-     * @return the month
-     */
-    public String getMonth() {
-        return month;
-    }
-
-    /**
-     * @param month the month to set
-     */
-    public void setMonth(String month) {
-        this.month = month;
+    public void setDay(String day) {
+        this.day = day;
     }
 
     /**

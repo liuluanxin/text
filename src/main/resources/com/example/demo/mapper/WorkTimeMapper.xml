@@ -64,6 +64,8 @@
         <if test="!@org.springframework.util.StringUtils@isEmpty(managerUserId)">
             AND t3.management_user_id = #{managerUserId}
         </if>
+        AND t1.target_date <![CDATA[ >= ]]>STR_TO_DATE(#{day},'%Y,%m,%d')
+        AND t1.target_date <![CDATA[ < ]]>DATE_ADD(STR_TO_DATE(#{day},'%Y,%m,%d'),INTERVAL 1 MONTH)
         <if test="!@org.springframework.util.StringUtils@isEmpty(projectId)">
             AND t1.project_id = #{projectId}
         </if>
@@ -111,6 +113,7 @@
         DELETE
         FROM tr_user_extra_worktime
         WHERE user_id = #{userId}
+          AND target_date = #{targetDate}
           AND project_id = #{projectId}
     </delete>
 
@@ -156,7 +159,7 @@
           , dm_approved = '1'
           , update_at   = NOW()
           , update_by   = #{updateBy}
-        WHERE user_id || '_' || target_date || '_' || project_id = #{id}
+        WHERE concat(user_id, '_', target_date, '_', project_id) = #{id}
     </update>
 
 </mapper>

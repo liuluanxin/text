@@ -10,4 +10,6 @@ import java.util.List;
 public interface ProjectMapper {
 
     List<Project> getProjectList(ProjectRequest condition);
+
+    Project getProjectId(String projectId);
 }
