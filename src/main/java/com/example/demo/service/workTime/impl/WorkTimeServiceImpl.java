@@ -123,6 +123,10 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         workTimeMapper.updateWorkTime(workTime);
     }
 
+    /**
+     * 删除
+     * @param ids
+     */
     @Override
     public void deleteWorkTimes(List<String> ids) {
 
