@@ -106,9 +106,6 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         return workTimeMapper.getWorkTimeCreateUse(userId, request.getTargetDate(), request.getProjectId());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateWorkTimes(WorkTimeRequest request) {
 
@@ -126,9 +123,6 @@ public class WorkTimeServiceImpl implements WorkTimeService {
         workTimeMapper.updateWorkTime(workTime);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void deleteWorkTimes(List<String> ids) {
 
