@@ -5,8 +5,6 @@ import com.example.demo.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.transform.Result;
-
 @RestController
 @RequestMapping("user")
 public class UserController {
