@@ -95,7 +95,7 @@ public class WorkTimeController {
     @DeleteMapping("/user-worktime")
     @Transactional
     public void deleteWorkTimeForUser(@RequestBody List<String> ids) {
-        
+
         workTimeService.deleteWorkTimes(ids);
     }
 }
